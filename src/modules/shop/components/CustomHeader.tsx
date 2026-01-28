@@ -2,7 +2,8 @@ import { CustomLogo } from "@/components/custom/CustomLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { Menu, Search } from "lucide-react";
+import { useAuthStore } from "@/modules/auth/store/auth.store";
+import { Search } from "lucide-react";
 import { useRef } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
 
@@ -12,6 +13,7 @@ export const CustomHeader = () => {
 
     const { gender } = useParams()
 
+    const { user , logOut} = useAuthStore();
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -75,16 +77,29 @@ export const CustomHeader = () => {
                         <Search className="h-5 w-5" />
                     </Button>
 
-                    <Link to='/auth/login'>
-                        <Button
-                            variant='default'
-                            size='sm'
-                            className="ml-2">
-                            login
-                        </Button>
-                    </Link>
+                    { //si existe un usuario mostramos el cerrar sesion pero si no el inicio de sesion
+                        !user ? (
+                            <Link to='/auth/login'>
+                                <Button
+                                    variant='default'
+                                    size='sm'
+                                    className="ml-2">
+                                    login
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Button
+                                variant='outline'
+                                onClick={logOut}
+                                size='sm'
+                                className="ml-2">
+                                cerrar sesion
+                            </Button>
+                        )
+                    }
 
-                     <Link to='/admin'>
+
+                    <Link to='/admin'>
                         <Button
                             variant='destructive'
                             size='sm'
